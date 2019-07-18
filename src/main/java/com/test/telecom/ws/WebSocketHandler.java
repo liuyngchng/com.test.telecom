@@ -74,6 +74,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
                 return;
             }
             sb.append("time: " + v.getDate() + ", from:" + v.getFrom() + ", msg:" + v.getText() + "\r\n");
+            v.setDelivered();
             ctx.channel().writeAndFlush(new TextWebSocketFrame(sb.toString()));
         });
     }

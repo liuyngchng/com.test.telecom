@@ -97,4 +97,8 @@ public class Mail implements Serializable {
     public void setAttachment(String attachment) {
         this.attachment = attachment;
     }
+
+    public void setDelivered() {
+        this.state = MailState.DELIVERED.getValue();
+    }
 }

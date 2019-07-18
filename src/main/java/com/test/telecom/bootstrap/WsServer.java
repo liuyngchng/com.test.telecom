@@ -1,5 +1,6 @@
-package com.test.telecom.ws;
+package com.test.telecom.bootstrap;
 
+import com.test.telecom.ws.WebSocketChannelInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;

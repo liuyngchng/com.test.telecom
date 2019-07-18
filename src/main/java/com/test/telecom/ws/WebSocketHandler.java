@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Richard Liu
@@ -54,29 +55,36 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketF
                 this.sendMsg(ctx, data);
                 break;
             case PULL_MSG:
-                this.pullMsg(ctx, data);
+                this.pullMsg(ctx);
                 break;
             default:
                 break;
         }
     }
 
-    private void pullMsg(ChannelHandlerContext ctx, String[] data) {
+    private void pullMsg(ChannelHandlerContext ctx) {
         final String to  = ctx.channel().attr(Connection.uidKey).get();
+        LOGGER.info("user {} pull_msg");
         if (null == to) {
             ctx.channel().writeAndFlush(new TextWebSocketFrame("info:用户未登录"));
             return;
         }
         StringBuffer sb = new StringBuffer(16);
         sb.append("mail:");
+        AtomicInteger count = new AtomicInteger(0);
         InboxInfo.mail.get(to).forEach((k, v) -> {
             if (v.getState() == MailState.DELIVERED.getValue()) {
                 return;
             }
+            count.getAndIncrement();
             sb.append("time: " + v.getDate() + ", from:" + v.getFrom() + ", msg:" + v.getText() + "\r\n");
             v.setDelivered();
-            ctx.channel().writeAndFlush(new TextWebSocketFrame(sb.toString()));
         });
+        if (count.get() == 0) {
+            sb.append("0");
+        }
+        ctx.channel().writeAndFlush(new TextWebSocketFrame(sb.toString()));
+        LOGGER.info("user {} pull_msg count {}", to, count.get());
     }
 
     private void sendMsg(ChannelHandlerContext ctx, String[] data) {

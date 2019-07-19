@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option java_package = "com.demo.client.connect.protobuf";
+
+option java_outer_classname = "Message";
+
+message data {
+    string signal = 1;
+    string from = 2;
+    string to = 3;
+    string text = 4;
+    string attachment = 5;
+    int64 timestamp = 6;
+}

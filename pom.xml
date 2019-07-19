@@ -4,15 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.test.telecom</groupId>
+    <groupId>com.demo.telecom</groupId>
     <artifactId>test.mail</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>com.test.client.connect</module>
-        <module>com.test.msg.dispatcher</module>
-        <module>com.test.msg.inbox</module>
-        <module>com.test.msg.outbox</module>
+        <module>com.demo.client.connect</module>
+        <module>com.demo.msg.dispatcher</module>
+        <module>com.demo.msg.inbox</module>
+        <module>com.demo.msg.outbox</module>
     </modules>
     <dependencies>
         <dependency>

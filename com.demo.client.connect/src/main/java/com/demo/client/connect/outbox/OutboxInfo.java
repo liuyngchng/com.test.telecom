@@ -1,12 +1,10 @@
-package com.demo.telecom.outbox;
+package com.demo.client.connect.outbox;
 
-import com.demo.telecom.model.Mail;
+import com.demo.client.connect.model.Mail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 

@@ -1,6 +1,5 @@
-package com.demo.telecom.ws;
+package com.demo.client.connect.ws;
 
-import com.demo.telecom.endpoint.Connection;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;

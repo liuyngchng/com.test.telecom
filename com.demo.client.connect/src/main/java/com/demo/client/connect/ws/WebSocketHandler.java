@@ -1,19 +1,17 @@
-package com.demo.telecom.ws;
+package com.demo.client.connect.ws;
 
-import com.demo.telecom.endpoint.Connection;
-import com.demo.telecom.enums.MailState;
-import com.demo.telecom.enums.Signal;
-import com.demo.telecom.inbox.InboxInfo;
-import com.demo.telecom.model.Mail;
-import com.demo.telecom.outbox.OutboxInfo;
+import com.demo.client.connect.endpoint.Connection;
+import com.demo.client.connect.enums.Signal;
+import com.demo.client.connect.model.Mail;
+import com.demo.client.connect.enums.MailState;
+import com.demo.client.connect.inbox.InboxInfo;
+import com.demo.client.connect.outbox.OutboxInfo;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;

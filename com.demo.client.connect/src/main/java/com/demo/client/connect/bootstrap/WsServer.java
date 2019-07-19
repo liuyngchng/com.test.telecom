@@ -1,6 +1,6 @@
-package com.demo.telecom.bootstrap;
+package com.demo.client.connect.bootstrap;
 
-import com.demo.telecom.ws.WebSocketChannelInitializer;
+import com.demo.client.connect.ws.WebSocketChannelInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;

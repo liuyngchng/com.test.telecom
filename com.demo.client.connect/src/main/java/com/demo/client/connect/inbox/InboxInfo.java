@@ -1,6 +1,6 @@
-package com.demo.telecom.inbox;
+package com.demo.client.connect.inbox;
 
-import com.demo.telecom.model.Mail;
+import com.demo.client.connect.model.Mail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

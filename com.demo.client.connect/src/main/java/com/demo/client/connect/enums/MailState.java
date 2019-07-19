@@ -1,4 +1,4 @@
-package com.demo.telecom.enums;
+package com.demo.client.connect.enums;
 
 /**
  * Mail state

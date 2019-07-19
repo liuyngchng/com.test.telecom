@@ -1,4 +1,4 @@
-package com.demo.telecom.endpoint;
+package com.demo.client.connect.endpoint;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.AttributeKey;

@@ -12,23 +12,36 @@
 
             //当有消息过来的时候触发
             websocket.onmessage = function(event){
-                console.log("ws received msg: " + JSON.stringify(event));
-                var respMessage = document.getElementById("respMessage");
-                respMessage.value = respMessage.value + "\n" + event.data;
+                console.log("ws received msg: " + JSON.stringify(event.data));
+                if (null == event.data) {
+                    console.log("data error")
+                    return;
+                }
+                var msg = JSON.parse(event.data);
+                if (msg.signal == 'ntf') {
+                    var status = document.getElementById("status");
+                    status.value = msg.payload;
+                } else if (msg.signal == 'send_msg') {
+                    var status = document.getElementById("status");
+                    status.value = 'received new mail';
+                    var msgElem = document.getElementById("respMessage");
+                    msgElem.value = msg.payload;
+                }
+
             }
 
             //连接关闭的时候触发
             websocket.onclose = function(event){
                 console.log("ws closed.");
-                var respMessage = document.getElementById("respMessage");
-                respMessage.value = respMessage.value + "\n断开连接";
+                var status = document.getElementById("status");
+                status.value = "ws断开连接";
             }
 
             //连接打开的时候触发
             websocket.onopen = function(event){
                 console.log("ws opened.");
-                var respMessage = document.getElementById("respMessage");
-                respMessage.value = "建立连接";
+                var status = document.getElementById("status");
+                status.value = "ws建立连接";
 //                websocket.send("id=" + document.getElementById("uid"))
             }
         } else {
@@ -44,19 +57,63 @@
                 return;
             }
         }
+
+
+        function login(token) {
+            var msg = {};
+            msg['id'] = uuid();
+            msg['signal'] = "login";
+            msg['token'] = token;
+            var tokenElement = document.getElementById("token");
+            tokenElement.value = token;
+            sendMsg(JSON.stringify(msg));
+
+        }
+
+        function sendMail(to, text) {
+            var msg = {};
+            msg['id'] = uuid();
+            msg['signal'] = "send_msg";
+            msg['token'] = document.getElementById("token").value;
+            var mail = {};
+            mail.to = to;
+            mail.text = text;
+            msg.payload = JSON.stringify(mail);
+            console.log('send mail ' + JSON.stringify(msg));
+            sendMsg(JSON.stringify(msg));
+        }
+
+
+
+        function uuid() {
+            var s = [];
+            var hexDigits = "0123456789abcdef";
+            for (var i = 0; i < 36; i++) {
+                s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+            }
+            s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+            s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+            s[8] = s[13] = s[18] = s[23] = "-";
+
+            var uuid = s.join("");
+            return uuid;
+        }
     </script>
 </head>
 <body>
 <form onsubmit="return false">
-    <h3>1. Login</h3>
+    <h3>1. login</h3>
     <input type="text" value="123" name="id" id="uid">
-    <input type="button" onclick="sendMsg('login:'+this.form.id.value)" value="登录"><br>
-    <h3>2. outbox</h3>
+    <input type="button" onclick="login(this.form.id.value)" value="登录"><br>
+    <input type="hidden" value="" name = "token" id="token">
+    <h3>2. notify</h3>
+    <input type="text" value="123" name="status" id="status">
+    <h3>3. outbox</h3>
     <span>to：</span>
     <input type="text" value="" name = "to"><br/>
     <textarea style="width: 300px; height: 200px;" name="message"></textarea>
-    <input type="button" onclick="sendMsg('send_msg:' + this.form.to.value+':'+this.form.message.value)" value="发送"><br>
-    <h3>3. inbox</h3>
+    <input type="button" onclick="sendMail(this.form.to.value, this.form.message.value)" value="发送"><br>
+    <h3>4. inbox</h3>
     <textarea style="width: 300px; height: 200px;" id="respMessage"></textarea>
     <input type="button" value="clear" onclick="javascript:document.getElementById('respMessage').value = ''"></br>
     <input type="button" value="get" onclick="sendMsg('pull_msg:' + this.form.id.value)">

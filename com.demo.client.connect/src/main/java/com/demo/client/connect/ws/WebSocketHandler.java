@@ -1,163 +1,1 @@
-package com.demo.client.connect.ws;
-
-import com.demo.client.connect.endpoint.Connection;
-import com.demo.client.connect.enums.Signal;
-import com.demo.client.connect.model.Mail;
-import com.demo.client.connect.enums.MailState;
-import com.demo.client.connect.inbox.InboxInfo;
-import com.demo.client.connect.outbox.OutboxInfo;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-
-/**
- * @author Richard Liu
- * @since 2019.07.18
- */
-public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketHandler.class);
-
-//    @Override
-//    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-//        if (null != msg  && msg instanceof FullHttpRequest) {
-//            FullHttpRequest request = (FullHttpRequest) msg;
-//            LOGGER.info("url is {}", request.uri());
-//            String uid = request.uri().split("\\?")[1].split("=")[1];
-//            LOGGER.info("user id is {}", uid);
-//            Connection.clients.put(uid, ctx);
-//        }
-//        super.channelRead(ctx, msg);
-//    }
-
-    @Override
-    protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
-        final String[] data = msg.text().split(":");
-        if (null == data || data.length < 2) {
-            LOGGER.info("illegal data");
-            ctx.channel().writeAndFlush(new TextWebSocketFrame("数据非法"));
-            return;
-        }
-        final Signal sig = Signal.getByName(data[0].trim());
-        switch (sig) {
-            case LOGIN:
-                this.login(ctx, data[1]);
-                break;
-            case SEND_MSG:
-                this.sendMsg(ctx, data);
-                break;
-            case PULL_MSG:
-                this.pullMsg(ctx);
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void pullMsg(ChannelHandlerContext ctx) {
-        final String to  = ctx.channel().attr(Connection.uidKey).get();
-        LOGGER.info("user {} pull_msg");
-        if (null == to) {
-            ctx.channel().writeAndFlush(new TextWebSocketFrame("info:用户未登录"));
-            return;
-        }
-        StringBuffer sb = new StringBuffer(16);
-        sb.append("mail:");
-        AtomicInteger count = new AtomicInteger(0);
-        InboxInfo.mail.get(to).forEach((k, v) -> {
-            if (v.getState() == MailState.DELIVERED.getValue()) {
-                return;
-            }
-            count.getAndIncrement();
-            sb.append("time: " + v.getDate() + ", from:" + v.getFrom() + ", msg:" + v.getText() + "\r\n");
-            v.setDelivered();
-        });
-        if (count.get() == 0) {
-            sb.append("0");
-        }
-        ctx.channel().writeAndFlush(new TextWebSocketFrame(sb.toString()));
-        LOGGER.info("user {} pull_msg count {}", to, count.get());
-    }
-
-    private void sendMsg(ChannelHandlerContext ctx, String[] data) {
-        if (data.length < 3) {
-            ctx.channel().writeAndFlush(new TextWebSocketFrame("info:数据非法"));
-            return;
-        }
-        final String from  = ctx.channel().attr(Connection.uidKey).get();
-        if (null == from) {
-            ctx.channel().writeAndFlush(new TextWebSocketFrame("info:用户未登录"));
-            return;
-        }
-        final Mail mail = this.buildMail(from, data);
-        saveMail(mail);
-        LOGGER.info(
-            "address:{} | from: {} | to:{} | msg:{} ",
-            ctx.channel().remoteAddress(),
-            mail.getFrom(),
-            mail.getTo(),
-            mail.getText()
-        );
-        if (null == Connection.clients.get(mail.getTo())) {
-            LOGGER.info("user {} is offline", mail.getTo());
-            ctx.channel().writeAndFlush(new TextWebSocketFrame(mail.getTo() + "当前不在线,稍后投递"));
-        } else {
-            Connection.clients.get(mail.getTo()).channel().writeAndFlush(
-                new TextWebSocketFrame("time: " + mail.getDate() + ", from:" + mail.getFrom() + ", msg:" + mail.getText())
-            );
-            InboxInfo.mail.get(mail.getTo()).get(mail.getId()).setState(MailState.DELIVERED.getValue());
-            ctx.channel().writeAndFlush(new TextWebSocketFrame("给 " + mail.getTo() + "的mail发送成功"));
-        }
-    }
-
-    private void login(ChannelHandlerContext ctx, String s) {
-        final String uid = s;
-        LOGGER.info("{} login", uid);
-        Connection.clients.put(uid, ctx);
-
-        ctx.channel().attr(Connection.uidKey).set(uid);
-        ctx.channel().writeAndFlush(new TextWebSocketFrame(uid + "登录成功"));
-    }
-
-
-    @Override
-    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("ChannelId" + ctx.channel().id().asLongText());
-    }
-
-    @Override
-    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("用户下线: " + ctx.channel().id().asLongText());
-    }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        ctx.channel().close();
-    }
-
-    private void saveMail(Mail mail) {
-        if (null == OutboxInfo.mail.get(mail.getFrom())) {
-            OutboxInfo.mail.put(mail.getFrom(), new HashMap<>(8));
-        }
-        OutboxInfo.mail.get(mail.getFrom()).put(mail.getId(),mail);
-        if (null == InboxInfo.mail.get(mail.getTo())) {
-            InboxInfo.mail.put(mail.getTo(), new HashMap<>(8));
-        }
-        InboxInfo.mail.get(mail.getTo()).put(mail.getId(),mail);
-    }
-
-    private Mail buildMail(final String from, final String[] data) {
-        final Mail mail = new Mail();
-        mail.setFrom(from);
-        mail.setTo(data[1]);
-        mail.setDate(new Date());
-        mail.setText(data[2]);
-        return mail;
-    }
-}
+package com.demo.client.connect.ws;import com.demo.client.connect.endpoint.Connection;import com.demo.client.connect.enums.Signal;import com.demo.client.connect.model.Mail;import com.demo.client.connect.enums.MailState;import com.demo.client.connect.inbox.InboxInfo;import com.demo.client.connect.model.Msg;import com.demo.client.connect.outbox.OutboxInfo;import com.google.common.base.Strings;import com.google.gson.Gson;import io.netty.channel.ChannelHandlerContext;import io.netty.channel.SimpleChannelInboundHandler;import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;import org.slf4j.Logger;import org.slf4j.LoggerFactory;import java.util.Date;import java.util.HashMap;import java.util.List;import java.util.UUID;import java.util.concurrent.atomic.AtomicInteger;/** * @author Richard Liu * @since 2019.07.18 */public class WebSocketHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketHandler.class);    @Override    protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame frame) throws Exception {        if (null == frame || null == frame.text()) {            LOGGER.info("illegal data");            ctx.channel().writeAndFlush(new TextWebSocketFrame(this.buildNotify("数据非法")));            return;        }        LOGGER.info("msg is {}", frame.text());        final Gson gson = new Gson();        final Msg msg = gson.fromJson(frame.text(), Msg.class);        if (null == msg || null == msg.getSignal()) {            LOGGER.info("illegal msg");            ctx.channel().writeAndFlush(new TextWebSocketFrame(this.buildNotify("数据非法")));            return;        }        final Signal sig = Signal.getByName(msg.getSignal());        switch (sig) {            case LOGIN:                this.login(ctx, msg.getToken());                break;            case SEND_MSG:                this.sendMsg(ctx, msg);                break;            case PULL_MSG:                this.pullMsg(ctx);                break;            default:                break;        }    }    private void pullMsg(ChannelHandlerContext ctx) {        final String to = ctx.channel().attr(Connection.uidKey).get();        LOGGER.info("user {} pull_msg");        if (null == to) {            ctx.channel().writeAndFlush(new TextWebSocketFrame(this.buildNotify("用户未登录")));            return;        }        final StringBuffer sb = new StringBuffer(16);        sb.append("mail:");        AtomicInteger count = new AtomicInteger(0);        InboxInfo.mail.get(to).forEach((k, v) -> {            if (v.getState() == MailState.DELIVERED.getValue()) {                return;            }            count.getAndIncrement();            sb.append(this.mail2msg(v) + "\r\n");            v.setDelivered();        });        if (count.get() == 0) {            sb.append("0");        }        ctx.channel().writeAndFlush(new TextWebSocketFrame(sb.toString()));        LOGGER.info("user {} pull_msg count {}", to, count.get());    }    private void sendMsg(ChannelHandlerContext ctx, Msg msg) {        if (null == msg || null == msg.getPayload()) {            ctx.channel().writeAndFlush(new TextWebSocketFrame(this.buildNotify("数据非法")));            return;        }        final String from = ctx.channel().attr(Connection.uidKey).get();        if (null == from) {            ctx.channel().writeAndFlush(new TextWebSocketFrame(this.buildNotify("用户未登录")));            return;        }        final Mail mail = this.msg2mail(from, msg.getPayload());        if (null == mail || Strings.isNullOrEmpty(mail.getText())) {            ctx.channel().writeAndFlush(new TextWebSocketFrame(this.buildNotify("数据非法")));            return;        }        saveMail(mail);        LOGGER.info(            "address:{} | from: {} | to:{} | msg:{} ",            ctx.channel().remoteAddress(),            mail.getFrom(),            mail.getTo(),            mail.getText()        );        if (null == Connection.clients.get(mail.getTo())) {            LOGGER.info("user {} is offline", mail.getTo());            ctx.channel().writeAndFlush(                new TextWebSocketFrame(                    this.buildNotify(mail.getTo() + "当前不在线,稍后投递")                )            );        } else {            Connection.clients.get(mail.getTo()).channel().writeAndFlush(                new TextWebSocketFrame(this.mail2msg(mail))            );            InboxInfo.mail.get(mail.getTo()).get(mail.getId()).setState(MailState.DELIVERED.getValue());            ctx.channel().writeAndFlush(                new TextWebSocketFrame(                    this.buildNotify("给 " + mail.getTo() + " 的mail发送成功")                )            );        }    }    private void login(ChannelHandlerContext ctx, String s) {        final String uid = s;        LOGGER.info("{} login", uid);        Connection.clients.put(uid, ctx);        ctx.channel().attr(Connection.uidKey).set(uid);        final Msg msg = new Msg();        msg.setId(UUID.randomUUID().toString());        msg.setFrom("srv");        msg.setTo(uid);        msg.setSignal(Signal.NTF.getName());        msg.setPayload("{\"login\":\"success\"}");        Gson gson = new Gson();        ctx.channel().writeAndFlush(new TextWebSocketFrame(gson.toJson(msg)));    }    @Override    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {        LOGGER.info("ChannelId {}", ctx.channel().id().asLongText());    }    @Override    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {        LOGGER.info("用户下线: {}", ctx.channel().id().asLongText());        ctx.channel().writeAndFlush(this.buildNotify("用户下线"));    }    @Override    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {        LOGGER.info("exception", cause);        ctx.channel().writeAndFlush(this.buildNotify(cause.getMessage()));        ctx.channel().close();    }    private void saveMail(Mail mail) {        if (null == OutboxInfo.mail.get(mail.getFrom())) {            OutboxInfo.mail.put(mail.getFrom(), new HashMap<>(8));        }        OutboxInfo.mail.get(mail.getFrom()).put(mail.getId(), mail);        if (null == InboxInfo.mail.get(mail.getTo())) {            InboxInfo.mail.put(mail.getTo(), new HashMap<>(8));        }        InboxInfo.mail.get(mail.getTo()).put(mail.getId(), mail);    }    private Mail msg2mail(final String from, final String msg) {        final Gson gson = new Gson();        final Mail mail = gson.fromJson(msg, Mail.class);        mail.setFrom(from);        mail.setDate(new Date());        return mail;    }    private String mail2msg(final Mail mail) {        final Gson gson = new Gson();        final Msg msg = new Msg();        msg.setSignal(Signal.SEND_MSG.getName());        msg.setFrom("server");        msg.setTo(mail.getTo());        msg.setPayload(gson.toJson(mail));        return gson.toJson(msg);    }    private String mail2msg(final List<Mail> mail) {        final Gson gson = new Gson();        final Msg msg = new Msg();        msg.setSignal(Signal.SEND_MSG.getName());        msg.setFrom("server");        msg.setTo(mail.get(0).getTo());        final StringBuffer sb = new StringBuffer(16);        mail.forEach((v) -> {            if (v.getState() == MailState.DELIVERED.getValue()) {                return;            }            sb.append(this.mail2msg(v) + "\r\n");            v.setDelivered();        });        msg.setPayload(sb.toString());        return gson.toJson(msg);    }    private String buildNotify(final String info) {        final Gson gson = new Gson();        final Msg msg = new Msg();        msg.setSignal(Signal.NTF.getName());        msg.setPayload("{\"info\":\"" + info + "\"}");        return gson.toJson(msg);    }}

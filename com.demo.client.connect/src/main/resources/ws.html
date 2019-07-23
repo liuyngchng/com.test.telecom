@@ -83,6 +83,15 @@
             sendMsg(JSON.stringify(msg));
         }
 
+        function pullMail() {
+            var msg = {};
+            msg.id = uuid();
+            msg.signal = "pull_msg";
+            msg.token = document.getElementById("token").value;
+            console.log('pull mail ' + JSON.stringify(msg));
+            sendMsg(JSON.stringify(msg));
+        }
+
 
 
         function uuid() {
@@ -116,7 +125,7 @@
     <h3>4. inbox</h3>
     <textarea style="width: 300px; height: 200px;" id="respMessage"></textarea>
     <input type="button" value="clear" onclick="javascript:document.getElementById('respMessage').value = ''"></br>
-    <input type="button" value="get" onclick="sendMsg('pull_msg:' + this.form.id.value)">
+    <input type="button" value="get" onclick="pullMail()">
 </form>
 </body>
 </html>

@@ -25,7 +25,7 @@ public class WsServer {
      */
     private static final int PORT = 8080;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void start() throws InterruptedException {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try{
@@ -38,9 +38,15 @@ public class WsServer {
             ChannelFuture channelFuture = serverBootstrap.bind(PORT).sync();
             LOGGER.info("webSocket server listening for {}", PORT);
             channelFuture.channel().closeFuture().sync();
+            LOGGER.info("webSocket server stop listening for {}", PORT);
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
+    }
+
+
+    public static void main(String[] args) throws InterruptedException {
+        WsServer.start();
     }
 }

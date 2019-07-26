@@ -8,7 +8,7 @@
         <artifactId>test.mail</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>com.demo.bootstrp</artifactId>
+    <artifactId>com.demo.bootstrap</artifactId>
     <dependencies>
         <dependency>
             <groupId>com.demo.telecom</groupId>

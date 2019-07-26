@@ -1,6 +1,7 @@
 package com.demo.client.connect.bootstrap;
 
 import com.demo.client.connect.ws.WebSocketChannelInitializer;
+import com.sun.org.omg.CORBA.ExcDescriptionSeqHelper;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
@@ -25,10 +26,10 @@ public class WsServer {
      */
     private static final int PORT = 8080;
 
-    public static void start() throws InterruptedException {
+    public static void start() {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
-        try{
+        try {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             serverBootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
@@ -39,6 +40,8 @@ public class WsServer {
             LOGGER.info("webSocket server listening for {}", PORT);
             channelFuture.channel().closeFuture().sync();
             LOGGER.info("webSocket server stop listening for {}", PORT);
+        } catch (Exception ex) {
+            LOGGER.error("error", ex);
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

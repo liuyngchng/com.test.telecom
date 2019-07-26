@@ -10,7 +10,11 @@
     </parent>
     <artifactId>com.demo.bootstrp</artifactId>
     <dependencies>
-
+        <dependency>
+            <groupId>com.demo.telecom</groupId>
+            <artifactId>com.demo.client.connect</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

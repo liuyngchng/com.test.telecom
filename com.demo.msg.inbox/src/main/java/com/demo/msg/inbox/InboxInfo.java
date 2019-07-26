@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * Inbox info.
@@ -15,5 +16,12 @@ public class InboxInfo {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(InboxInfo.class);
 
-    public static final Map<String, Map<Long, Mail>> mail = new HashMap<>(8);
+    public static final Map<String, Map<Long, Mail>> mailIndex = new HashMap<>(8);
+
+    public static final PriorityBlockingQueue<Mail> queue = new PriorityBlockingQueue(128);
+
+
+    public static void main(String[] args) {
+        queue.
+    }
 }

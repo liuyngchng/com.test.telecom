@@ -1,4 +1,4 @@
-package com.demo.client.connect.model;
+package com.demo.common.model;
 
 import java.io.Serializable;
 import java.util.UUID;

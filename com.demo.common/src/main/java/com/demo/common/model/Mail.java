@@ -1,6 +1,7 @@
-package com.demo.client.connect.model;
+package com.demo.common.model;
 
-import com.demo.client.connect.enums.MailState;
+
+import com.demo.common.enums.MailState;
 
 import java.io.Serializable;
 import java.util.Date;

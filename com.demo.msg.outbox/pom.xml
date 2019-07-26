@@ -10,7 +10,24 @@
     </parent>
     <artifactId>com.demo.msg.outbox</artifactId>
     <dependencies>
-
+        <dependency>
+            <groupId>com.demo.telecom</groupId>
+            <artifactId>com.demo.common</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
+        <!--slf4j bridge-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

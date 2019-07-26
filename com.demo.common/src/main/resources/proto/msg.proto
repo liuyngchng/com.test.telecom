@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option java_package = "com.demo.client.connect.protobuf";
+option java_package = "com.demo.common.protobuf";
 
 option java_outer_classname = "Message";
 

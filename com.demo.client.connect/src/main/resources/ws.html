@@ -8,7 +8,7 @@
 
         //如果浏览器支持WebSocket
         if (window.WebSocket){
-            websocket = new WebSocket("ws://localhost:8080/ws");  //获得WebSocket对象
+            websocket = new WebSocket("ws://localhost:8081/ws");  //获得WebSocket对象
 
             //当有消息过来的时候触发
             websocket.onmessage = function(event){

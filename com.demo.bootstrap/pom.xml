@@ -12,6 +12,11 @@
     <dependencies>
         <dependency>
             <groupId>com.demo.telecom</groupId>
+            <artifactId>com.demo.cluster.manager</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.demo.telecom</groupId>
             <artifactId>com.demo.client.connect</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
@@ -36,7 +41,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.demo.connect.bootstrap.WsServer</mainClass>
+                            <mainClass>com.demo.bootstrap.BootstrapServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

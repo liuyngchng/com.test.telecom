@@ -22,6 +22,7 @@ public class InboxInfo {
 
 
     public static void main(String[] args) {
-        queue.
+        queue.contains(null);
+
     }
 }

@@ -41,7 +41,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.demo.telecom.bootstrap.WsServer</mainClass>
+                            <mainClass>com.demo.msg.inbox.InboxInfo</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

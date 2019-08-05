@@ -2,7 +2,7 @@ package com.demo.bootstrap;
 
 
 import com.demo.client.connect.bootstrap.WsServer;
-import com.demo.cluster.manager.bootstrap.ClusterManager;
+import com.demo.file.FileServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.concurrent.ExecutorService;
@@ -20,10 +20,12 @@ public class BootstrapServer {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
 
         executorService.submit(() -> {
-            WsServer.start();
+            LOGGER.info("starting wsServer");
+            WsServer.start(8081);
         });
         executorService.submit(() -> {
-            ClusterManager.start();
+            LOGGER.info("starting fileServer");
+            FileServer.start(8082);
         });
         LOGGER.info("all service started.");
 

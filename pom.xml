@@ -18,6 +18,7 @@
         <module>com.demo.msg.outbox</module>
         <module>com.demo.cluster.manager</module>
         <module>com.demo.bootstrap</module>
+        <module>com.demo.file</module>
         <module>com.demo.common</module>
     </modules>
     <dependencyManagement>

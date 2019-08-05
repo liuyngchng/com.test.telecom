@@ -21,12 +21,8 @@ public class WsServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WsServer.class);
 
-    /**
-     * Listening port
-     */
-    private static final int PORT = 8081;
 
-    public static void start() {
+    public static void start(int port) {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
@@ -36,10 +32,10 @@ public class WsServer {
                 .handler(new LoggingHandler(LogLevel.INFO))
                 .childHandler(new WebSocketChannelInitializer());
 
-            ChannelFuture channelFuture = serverBootstrap.bind(PORT).sync();
-            LOGGER.info("webSocket server listening for {}", PORT);
+            ChannelFuture channelFuture = serverBootstrap.bind(port).sync();
+            LOGGER.info("webSocket server listening for {}", port);
             channelFuture.channel().closeFuture().sync();
-            LOGGER.info("webSocket server stop listening for {}", PORT);
+            LOGGER.info("webSocket server stop listening for {}", port);
         } catch (Exception ex) {
             LOGGER.error("error", ex);
         } finally {
@@ -50,6 +46,6 @@ public class WsServer {
 
 
     public static void main(String[] args) throws InterruptedException {
-        WsServer.start();
+        WsServer.start(8081);
     }
 }

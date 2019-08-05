@@ -19,6 +19,12 @@
             <groupId>com.demo.telecom</groupId>
             <artifactId>com.demo.client.connect</artifactId>
             <version>${project.parent.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>netty</artifactId>
+                    <groupId>io.netty</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     <build>

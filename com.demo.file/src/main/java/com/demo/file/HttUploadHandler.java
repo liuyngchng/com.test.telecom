@@ -1,5 +1,7 @@
 package com.demo.file;
 
+import com.demo.file.util.ConfigUtil;
+import com.demo.file.util.DbUtil;
 import com.demo.file.util.GeneralResponse;
 import com.demo.file.util.ResponseUtil;
 import io.netty.channel.ChannelHandlerContext;
@@ -88,5 +90,13 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
                 }
             }
         }
+    }
+
+    /**
+     * 保存文件元数据.
+     * @param fileId
+     */
+    private void saveFileMetadata(String fileId) {
+        DbUtil.saveMetadata(fileId, ConfigUtil.getLocalIp());
     }
 }

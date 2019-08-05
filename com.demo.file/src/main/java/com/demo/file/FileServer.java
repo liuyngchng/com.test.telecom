@@ -1,16 +1,11 @@
 package com.demo.file;
 
+import com.demo.file.util.ConfigUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpRequestDecoder;
-import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.slf4j.Logger;
@@ -23,7 +18,9 @@ public class FileServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileServer.class);
 
-    public static void start(int port) {
+    public static void start(String ip, int port) {
+        ConfigUtil.port = port;
+        ConfigUtil.localIP = ip;
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
@@ -45,8 +42,7 @@ public class FileServer {
         }
     }
 
-
     public static void main(String[] args) throws Exception {
-        FileServer.start(8999);
+        FileServer.start("192.168.0.1", 8999);
     }
 }

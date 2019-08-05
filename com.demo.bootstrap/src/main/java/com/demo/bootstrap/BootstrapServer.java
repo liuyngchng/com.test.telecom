@@ -25,7 +25,7 @@ public class BootstrapServer {
         });
         executorService.submit(() -> {
             LOGGER.info("starting fileServer");
-            FileServer.start(8082);
+            FileServer.start("192.168.0.1", 8082);
         });
         LOGGER.info("all service started.");
 

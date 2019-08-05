@@ -128,8 +128,9 @@
 
             // 计算文件切片总数
             slices = Math.ceil(blob.size / BYTES_PER_CHUNK);
-            totalSlices= slices;
-            while(start < blob.size) {
+            totalSlices = slices;
+            console.log('total slices is ' + totalSlices);
+            while (start < blob.size) {
                 end = start + BYTES_PER_CHUNK;
                 if(end > blob.size) {
                     end = blob.size;
@@ -138,7 +139,7 @@
                 start = end;
                 index++;
                 if ( index >= totalSlices )
-                    window.location="reboot.htm";
+                    window.location="error.htm";
             }
         }
 
@@ -146,13 +147,13 @@
         function uploadFile(blob, index, start, end) {
             var fd;
             var chunk;
-            var sliceIndex = blob.name + index;
+            var sliceIndex = blob.name;
             chunk = blob.slice(start,end);//切割文件
             fd = new FormData();
-            fd.append("UpgradeFileName", chunk, sliceIndex);
+            fd.append(chunk, sliceIndex);
             var xhr = new XMLHttpRequest();
             //false指同步上传，因为我的服务器内存较小，选择同步，如果追求速度，可以选择 //ture，异步上传
-            xhr.open('POST', 'cmd.cgi?cmd_tag=firmware_upgrade&group_tag=upgrade', false);
+            xhr.open('POST', 'http://localhost:8082/upload', false);
             xhr.send(fd);
             if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
                 setTimeout("", 10);
@@ -175,7 +176,7 @@
     <input type="text" value="" name = "to"><br/>
     <textarea style="width: 300px; height: 200px;" name="message"></textarea><br/>
     <span>attach：</span>
-    <input type="file" name="file" id="file"><br/>
+    <input type="file" name="file" id="file"> <input type="submit" name="submit"  onclick="sendRequest()" ><br/>
     <input type="button" onclick="sendMail(this.form.to.value, this.form.message.value)" value="发送"><br>
     <h3>4. inbox</h3>
     <textarea style="width: 300px; height: 200px;" id="respMessage"></textarea>

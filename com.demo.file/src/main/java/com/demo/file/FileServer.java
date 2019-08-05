@@ -11,6 +11,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,18 +30,9 @@ public class FileServer {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
-                .childHandler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    public void initChannel(SocketChannel ch)
-                        throws Exception {
-
-                        ch.pipeline().addLast(new HttpResponseEncoder());
-                        ch.pipeline().addLast(new HttpRequestDecoder());
-                        ch.pipeline().addLast(new HttpObjectAggregator(65535));
-                        ch.pipeline().addLast(new HttpServerHandler());
-                    }
-                }).option(ChannelOption.SO_BACKLOG, 128)
-                .childOption(ChannelOption.SO_KEEPALIVE, true);
+                .handler(new LoggingHandler(LogLevel.INFO))
+                //传递路由类
+                .childHandler(new NettyServerInitializer());
             ChannelFuture f = b.bind(port).sync();
             LOGGER.info("fileServer listening for {}", port);
             f.channel().closeFuture().sync();

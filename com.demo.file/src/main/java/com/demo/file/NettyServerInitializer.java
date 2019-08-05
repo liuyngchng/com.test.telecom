@@ -1,7 +1,9 @@
 package com.demo.file;
 
+import com.demo.file.handler.HttUploadHandler;
+import com.demo.file.handler.HttpDownloadHandler;
+import com.demo.file.handler.NettyServerHandler;
 import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;

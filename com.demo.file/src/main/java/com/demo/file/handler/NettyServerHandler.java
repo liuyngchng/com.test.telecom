@@ -1,4 +1,4 @@
-package com.demo.file;
+package com.demo.file.handler;
 
 import com.demo.file.util.GeneralResponse;
 import com.demo.file.util.ResponseUtil;

@@ -1,4 +1,4 @@
-package com.demo.file;
+package com.demo.file.handler;
 
 import com.demo.cluster.info.ClusterInfo;
 import com.demo.cluster.model.ServiceInfo;

@@ -41,8 +41,9 @@ public class FileServer {
                 }).option(ChannelOption.SO_BACKLOG, 128)
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
             ChannelFuture f = b.bind(port).sync();
-
+            LOGGER.info("fileServer listening for {}", port);
             f.channel().closeFuture().sync();
+            LOGGER.info("fileServer stop listening for {}", port);
         } catch (Exception ex) {
             LOGGER.error("error", ex);
         }finally {

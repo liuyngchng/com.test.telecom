@@ -22,7 +22,7 @@ public class DefaultServerHandler extends SimpleChannelInboundHandler<FullHttpRe
     private static final String UPLOAD_URI = "/upload";
 
     // 404文件页面地址
-    private static final File NOT_FOUND = new File("404.html");
+    private static final File NOT_FOUND = new File(DefaultServerHandler.class.getClassLoader().getResource("404.html").getPath());
 
 
     @Override
@@ -57,9 +57,16 @@ public class DefaultServerHandler extends SimpleChannelInboundHandler<FullHttpRe
             return;
         }
         // 根据路径地址构建文件
-        String path = this.getClass().getClassLoader().getResource(uri).getPath();
-        File html = new File(path);
-
+        File html;
+        String path = "";
+        try {
+            path = this.getClass().getClassLoader().getResource(uri).getPath();
+            html = new File(path);
+        } catch (Exception ex) {
+            LOGGER.error("file resource can't found for {}", uri);
+            path = "404.html";
+            html = new File("undefined");
+        }
         // 状态为1xx的话，继续请求
         if (HttpUtil.is100ContinueExpected(request)) {
             send100Continue(ctx);

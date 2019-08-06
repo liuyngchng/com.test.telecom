@@ -41,7 +41,6 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
     protected void channelRead0(final ChannelHandlerContext ctx, final HttpObject httpObject)
         throws Exception {
         if (httpObject instanceof HttpRequest) {
-
             this.request = (HttpRequest) httpObject;
             LOGGER.info("url is {}", request.uri());
             if (this.request.uri().startsWith(URI) && this.request.method().equals(HttpMethod.POST)) {
@@ -69,6 +68,8 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
 
     }
 
+
+
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         ctx.flush();
@@ -91,7 +92,7 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
                 try (FileChannel inputChannel = new FileInputStream(fileUpload.getFile()).getChannel();
                      FileChannel outputChannel = new FileOutputStream(file).getChannel()) {
                     outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
-                    ResponseUtil.response(ctx, this.request, new GeneralResponse(HttpResponseStatus.OK, "SUCCESS", null));
+                    ResponseUtil.responseJson(ctx, this.request, new GeneralResponse(HttpResponseStatus.OK, "SUCCESS", null));
                 }
             }
         }
@@ -104,4 +105,5 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
     private void saveFileMetadata(String fileId) {
         DbUtil.saveMetadata(fileId, ConfigUtil.getLocalIp());
     }
+
 }

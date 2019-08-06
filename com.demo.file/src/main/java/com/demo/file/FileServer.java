@@ -29,7 +29,7 @@ public class FileServer {
                 .channel(NioServerSocketChannel.class)
                 .handler(new LoggingHandler(LogLevel.INFO))
                 //传递路由类
-                .childHandler(new NettyServerInitializer());
+                .childHandler(new ServerInitializer());
             ChannelFuture f = b.bind(port).sync();
             LOGGER.info("fileServer listening for {}", port);
             f.channel().closeFuture().sync();

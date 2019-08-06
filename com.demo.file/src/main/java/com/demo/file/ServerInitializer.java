@@ -14,7 +14,7 @@ import io.netty.util.concurrent.EventExecutorGroup;
 /**
  * Created by richard on 05/08/2019.
  */
-public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
+public class ServerInitializer extends ChannelInitializer<SocketChannel> {
 
 
     @Override

@@ -47,7 +47,7 @@ public class HttpDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
             } catch (IndexOutOfBoundsException ex) {
                 LOGGER.error("error", ex);
                 generalResponse = new GeneralResponse(HttpResponseStatus.BAD_REQUEST, "parameter error ", null);
-                ResponseUtil.response(ctx, request, generalResponse);
+                ResponseUtil.responseJson(ctx, request, generalResponse);
                 return;
             }
             final String host = DbUtil.getHost(filename);
@@ -152,11 +152,11 @@ public class HttpDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
         } catch (FileNotFoundException e) {
             LOGGER.warn("file {} not found", file.getPath());
             generalResponse = new GeneralResponse(HttpResponseStatus.NOT_FOUND, String.format("file %s not found", file.getPath()), null);
-            ResponseUtil.response(ctx, request, generalResponse);
+            ResponseUtil.responseJson(ctx, request, generalResponse);
         } catch (IOException e) {
             LOGGER.warn("file {} has a IOException: {}", file.getName(), e.getMessage());
             generalResponse = new GeneralResponse(HttpResponseStatus.INTERNAL_SERVER_ERROR, String.format("读取 file %s 发生异常", filePath), null);
-            ResponseUtil.response(ctx, request, generalResponse);
+            ResponseUtil.responseJson(ctx, request, generalResponse);
         }
     }
 

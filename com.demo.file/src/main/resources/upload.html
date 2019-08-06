@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <title>uploadTest</title>
+    <script type="text/javascript">
+        var BYTES_PER_CHUNK = 1024 * 1024; // 每个文件切片大小定为1MB .
+        var slices;
+        var totalSlices;
+
+        //发送请求
+        function sendRequest() {
+            var blob = document.getElementById("file").files[0];
+            var start = 0;
+            var end;
+            var index = 0;
+
+
+            // 计算文件切片总数
+            slices = Math.ceil(blob.size / BYTES_PER_CHUNK);
+            totalSlices = slices;
+            console.log('total slices is ' + totalSlices);
+            while (start < blob.size) {
+                end = start + BYTES_PER_CHUNK;
+                if(end > blob.size) {
+                    end = blob.size;
+                }
+                uploadFile(blob, index, start, end);
+                start = end;
+                index++;
+                if ( index >= totalSlices )
+                    window.location="error.htm";
+            }
+        }
+
+        //上传文件
+        function uploadFile(blob, index, start, end) {
+            var fd;
+            var chunk;
+            var sliceIndex = blob.name;
+            chunk = blob.slice(start,end);//切割文件
+            fd = new FormData();
+            fd.append(chunk, sliceIndex);
+            var xhr = new XMLHttpRequest();
+            //false指同步上传，因为我的服务器内存较小，选择同步，如果追求速度，可以选择 //ture，异步上传
+            xhr.open('POST', 'http://localhost:8082/upload', false);
+            xhr.send(fd);
+            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                setTimeout("", 10);
+            } else {
+                uploadFile(blob, index, start, end);
+            }
+        }
+    </script>
+
+    <script type="application/javascript">
+        function sendFile() {
+            var blob = document.getElementById("file").files[0];
+            var xhr = new XMLHttpRequest();
+            //false指同步上传，因为我的服务器内存较小，选择同步，如果追求速度，可以选择 //ture，异步上传
+            xhr.open('POST', 'http://localhost:8082/upload', false);
+            xhr.send(blob.slice(0, blob.size, blob.type))
+
+        }
+    </script>
+</head>
+<body>
+<form onsubmit="return false">
+    <h3>Upload Test</h3>
+    <span>attach：</span>
+    <input type="file" name="file" id="file"> <br/>
+    <input type="submit" name="submit"  onclick="sendFile()" >
+</form>
+</body>
+</html>

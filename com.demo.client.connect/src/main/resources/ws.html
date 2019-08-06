@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <title>Socket</title>
     <!--<script type="text/javascript" src="jquery-3.4.1.js" />-->
     <!--<script type="text/javascript" src="js/jquery.form.js" />-->
@@ -162,6 +163,17 @@
             }
         }
     </script>
+
+    <script type="application/javascript">
+        function sendFile() {
+            var blob = document.getElementById("file").files[0];
+            var xhr = new XMLHttpRequest();
+            //false指同步上传，因为我的服务器内存较小，选择同步，如果追求速度，可以选择 //ture，异步上传
+            xhr.open('POST', 'http://localhost:8082/upload', false);
+            xhr.send(blob.slice(0, blob.size, blob.type))
+
+        }
+    </script>
 </head>
 <body>
 <form onsubmit="return false">
@@ -176,7 +188,7 @@
     <input type="text" value="" name = "to"><br/>
     <textarea style="width: 300px; height: 200px;" name="message"></textarea><br/>
     <span>attach：</span>
-    <input type="file" name="file" id="file"> <input type="submit" name="submit"  onclick="sendRequest()" ><br/>
+    <input type="file" name="file" id="file"> <input type="submit" name="submit"  onclick="sendFile()" ><br/>
     <input type="button" onclick="sendMail(this.form.to.value, this.form.message.value)" value="发送"><br>
     <h3>4. inbox</h3>
     <textarea style="width: 300px; height: 200px;" id="respMessage"></textarea>

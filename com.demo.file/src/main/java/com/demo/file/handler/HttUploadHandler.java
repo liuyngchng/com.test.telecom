@@ -41,7 +41,9 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
     protected void channelRead0(final ChannelHandlerContext ctx, final HttpObject httpObject)
         throws Exception {
         if (httpObject instanceof HttpRequest) {
+
             this.request = (HttpRequest) httpObject;
+            LOGGER.info("url is {}", request.uri());
             if (this.request.uri().startsWith(URI) && this.request.method().equals(HttpMethod.POST)) {
                 this.httpDecoder = new HttpPostRequestDecoder(factory, request);
                 this.httpDecoder.setDiscardThreshold(0);

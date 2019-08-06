@@ -2,7 +2,7 @@ package com.demo.file;
 
 import com.demo.file.handler.HttUploadHandler;
 import com.demo.file.handler.HttpDownloadHandler;
-import com.demo.file.handler.NettyServerHandler;
+import com.demo.file.handler.DefaultServerHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
@@ -31,6 +31,6 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
         // 用于下载文件
         ch.pipeline().addLast(new HttpDownloadHandler());
         //服务器端逻辑处理
-        ch.pipeline().addLast(new NettyServerHandler());
+        ch.pipeline().addLast(new DefaultServerHandler());
     }
 }

@@ -37,6 +37,7 @@ public class HttpDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) {
+        LOGGER.info("url is {}", request.uri());
         String uri = request.uri();
         if (uri.startsWith("/download") && request.method().equals(HttpMethod.GET)) {
             GeneralResponse generalResponse;

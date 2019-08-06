@@ -12,13 +12,14 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by richard on 05/08/2019.
  */
-public class NettyServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+public class DefaultServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NettyServerHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultServerHandler.class);
 
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) {
+        LOGGER.info("url is {}", request.uri());
         GeneralResponse generalResponse = new GeneralResponse(HttpResponseStatus.BAD_REQUEST, "请检查你的请求方法及url", null);
         ResponseUtil.response(ctx, request, generalResponse);
 

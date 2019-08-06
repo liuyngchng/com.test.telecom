@@ -5,9 +5,9 @@
     <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <title>uploadTest</title>
     <script type="text/javascript">
-        var BYTES_PER_CHUNK = 1024 * 1024; // 每个文件切片大小定为1MB .
+        var BYTES_PER_CHUNK = 1024 * 10; //1024 * 1024;// 每个文件切片大小定为1MB .
         var slices;
-        var totalSlices;
+        var total_slices;
 
         //发送请求
         function sendRequest() {
@@ -15,64 +15,69 @@
             var start = 0;
             var end;
             var index = 0;
-
-
             // 计算文件切片总数
-            slices = Math.ceil(blob.size / BYTES_PER_CHUNK);
-            totalSlices = slices;
-            console.log('total slices is ' + totalSlices);
+            total_slices = Math.ceil(blob.size / BYTES_PER_CHUNK);
+            console.log('total slices is ' + total_slices + ', file size ' + blob.size);
             while (start < blob.size) {
                 end = start + BYTES_PER_CHUNK;
-                if(end > blob.size) {
+                if (end > blob.size) {
                     end = blob.size;
                 }
-                uploadFile(blob, index, start, end);
+                console.log('upload index ' + index + ' start ' + start + ' end ' + end )
+                setTimeout(uploadFile(blob, index, start, end), 1000);
                 start = end;
                 index++;
-                if ( index >= totalSlices )
-                    window.location="error.htm";
+                if (index > total_slices) {
+                    window.location = "error.html";
+                }
             }
         }
 
         //上传文件
         function uploadFile(blob, index, start, end) {
-            var fd;
-            var chunk;
-            var sliceIndex = blob.name;
-            chunk = blob.slice(start,end);//切割文件
-            fd = new FormData();
-            fd.append(chunk, sliceIndex);
+            var sliceIndex = blob.name + '_' + index + '_' + total_slices;
+            var chunk = blob.slice(start, end, blob.type);//切割文件
+            chunk.name = sliceIndex;
+            var fd = new FormData();
+            fd.append(chunk.name, chunk);
             var xhr = new XMLHttpRequest();
-            //false指同步上传，因为我的服务器内存较小，选择同步，如果追求速度，可以选择 //ture，异步上传
             xhr.open('POST', 'http://localhost:8082/upload', false);
             xhr.send(fd);
-            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
-                setTimeout("", 10);
+            if (xhr.status == 200) {
+                console.log('success for chunk ' + chunk.name)
             } else {
-                uploadFile(blob, index, start, end);
+                console.log('error for chunk ' + chunk.name)
             }
         }
+
     </script>
 
     <script type="application/javascript">
+//        var BYTES_PER_CHUNK = 1024 * 10; //1024 * 1024; // 每个文件切片大小定为1MB .
+//        var slices;
+//        var total_slices;
         function sendFile() {
             var blob = document.getElementById("file").files[0];
             var value = new FormData();
-            value.append("file", blob);
+            value.append(blob.name, blob);
             var xhr = new XMLHttpRequest();
             //false指同步上传，因为我的服务器内存较小，选择同步，如果追求速度，可以选择 //ture，异步上传
             xhr.open('POST', 'upload', false);
-            xhr.send(value)
+            xhr.send(value);
+            if (xhr.status == 200) {
+                window.alert("success.")
+            }
 
         }
+
+
+
     </script>
 </head>
 <body>
-<form onsubmit="return false">
     <h3>Upload Test</h3>
     <span>attach：</span>
     <input type="file" name="file" id="file"> <br/>
-    <input type="submit" name="submit"  onclick="sendFile()" >
-</form>
+    <input type="submit" name="submit"  onclick="sendRequest()" >
 </body>
 </html>

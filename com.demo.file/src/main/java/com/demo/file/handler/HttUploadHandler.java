@@ -60,8 +60,6 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
                     this.writeChunk(ctx);
                     this.httpDecoder.destroy();
                     this.httpDecoder = null;
-                    GeneralResponse generalResponse = new GeneralResponse(HttpResponseStatus.NOT_ACCEPTABLE, "upload failed", null);
-                    ResponseUtil.responseJson(ctx, request, generalResponse);
                 }
 //                ReferenceCountUtil.release(httpObject);
             } else {
@@ -90,7 +88,7 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
             InterfaceHttpData data = this.httpDecoder.next();
             if (data != null && InterfaceHttpData.HttpDataType.FileUpload.equals(data.getHttpDataType())) {
                 final FileUpload fileUpload = (FileUpload) data;
-                final File file = new File(FILE_UPLOAD + fileUpload.getFilename());
+                final File file = new File(FILE_UPLOAD + System.currentTimeMillis() + "_" + fileUpload.getName());
                 LOGGER.info("upload file: {}", file);
                 try (FileChannel inputChannel = new FileInputStream(fileUpload.getFile()).getChannel();
                      FileChannel outputChannel = new FileOutputStream(file).getChannel()) {

@@ -35,8 +35,6 @@ public class DefaultServerHandler extends SimpleChannelInboundHandler<FullHttpRe
                 LOGGER.error("error", ex);
                 ctx.close();
             }
-
-//            ResponseUtil.response(ctx, request, this.getStaticContent(), HttpResponseStatus.OK, "text/html; charset=UTF-8");
         } else {
             GeneralResponse generalResponse = new GeneralResponse(HttpResponseStatus.BAD_REQUEST, "请检查你的请求方法及url", null);
             ResponseUtil.responseJson(ctx, request, generalResponse);
@@ -86,11 +84,11 @@ public class DefaultServerHandler extends SimpleChannelInboundHandler<FullHttpRe
         }
 
         // 设置文件格式内容
-        if (path.endsWith(".html")){
+        if (path.endsWith(".html")) {
             response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html; charset=UTF-8");
-        }else if(path.endsWith(".js")){
+        } else if (path.endsWith(".js")) {
             response.headers().set(HttpHeaderNames.CONTENT_TYPE, "application/x-javascript");
-        }else if(path.endsWith(".css")){
+        } else if(path.endsWith(".css")) {
             response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/css; charset=UTF-8");
         }
 

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.RandomAccessFile;
+import java.net.URI;
 
 /**
  * Created by richard on 05/08/2019.
@@ -21,8 +22,10 @@ public class DefaultServerHandler extends SimpleChannelInboundHandler<FullHttpRe
 
     private static final String UPLOAD_URI = "/upload";
 
+    private static final String location = "static/";
+
     // 404文件页面地址
-    private static final File NOT_FOUND = new File(DefaultServerHandler.class.getClassLoader().getResource("404.html").getPath());
+    private static final File NOT_FOUND = new File(DefaultServerHandler.class.getClassLoader().getResource(location + "404.html").getPath());
 
 
     @Override
@@ -50,6 +53,8 @@ public class DefaultServerHandler extends SimpleChannelInboundHandler<FullHttpRe
     private void feedStaticContent(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
         // 获取URI
         String uri = request.uri().replace("/", "");
+        URI url = new URI(uri);
+        uri = url.getPath();
         // 设置不支持favicon.ico文件
         if ("favicon.ico".equals(uri)) {
             return;
@@ -58,11 +63,11 @@ public class DefaultServerHandler extends SimpleChannelInboundHandler<FullHttpRe
         File html;
         String path = "";
         try {
-            path = this.getClass().getClassLoader().getResource(uri).getPath();
+            path = this.getClass().getClassLoader().getResource(location + uri).getPath();
             html = new File(path);
         } catch (Exception ex) {
             LOGGER.error("file resource can't found for {}", uri);
-            path = "404.html";
+            path = "static/404.html";
             html = new File("undefined");
         }
         // 状态为1xx的话，继续请求

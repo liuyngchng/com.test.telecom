@@ -25,8 +25,8 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
     /**
      * true: 将数据缓存至磁盘，false: 将数据缓存在memory
      */
-    private static final HttpDataFactory factory = new DefaultHttpDataFactory(DefaultHttpDataFactory.MINSIZE);
-    private static final String FILE_UPLOAD = "/data/";
+    private static final HttpDataFactory factory = new DefaultHttpDataFactory(true);
+    private static final String FILE_UPLOAD = "/tmp/";
 
     private static final String URI = "/upload";
 
@@ -52,6 +52,7 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
             }
         }
         if (httpObject instanceof HttpContent) {
+            LOGGER.debug("http content.");
             if (this.httpDecoder != null) {
                 final HttpContent chunk = (HttpContent) httpObject;
                 this.httpDecoder.offer(chunk);
@@ -59,8 +60,10 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
                     this.writeChunk(ctx);
                     this.httpDecoder.destroy();
                     this.httpDecoder = null;
+                    GeneralResponse generalResponse = new GeneralResponse(HttpResponseStatus.NOT_ACCEPTABLE, "upload failed", null);
+                    ResponseUtil.responseJson(ctx, request, generalResponse);
                 }
-                ReferenceCountUtil.release(httpObject);
+//                ReferenceCountUtil.release(httpObject);
             } else {
                 ctx.fireChannelRead(httpObject);
             }
@@ -93,6 +96,8 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
                      FileChannel outputChannel = new FileOutputStream(file).getChannel()) {
                     outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
                     ResponseUtil.responseJson(ctx, this.request, new GeneralResponse(HttpResponseStatus.OK, "SUCCESS", null));
+                } finally {
+
                 }
             }
         }

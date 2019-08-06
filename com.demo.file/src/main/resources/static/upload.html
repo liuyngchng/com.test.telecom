@@ -57,10 +57,12 @@
     <script type="application/javascript">
         function sendFile() {
             var blob = document.getElementById("file").files[0];
+            var value = new FormData();
+            value.append("file", blob);
             var xhr = new XMLHttpRequest();
             //false指同步上传，因为我的服务器内存较小，选择同步，如果追求速度，可以选择 //ture，异步上传
-            xhr.open('POST', 'http://localhost:8082/upload', false);
-            xhr.send(blob.slice(0, blob.size, blob.type))
+            xhr.open('POST', 'upload', false);
+            xhr.send(value)
 
         }
     </script>

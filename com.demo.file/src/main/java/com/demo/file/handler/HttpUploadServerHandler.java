@@ -69,9 +69,9 @@ public class HttpUploadServerHandler extends SimpleChannelInboundHandler<HttpObj
     static {
         //这是存储上传文件和属性的位置的配置，如果不存在该文件夹会报错。
         DiskFileUpload.deleteOnExitTemporaryFile = true; //当文件出现重名的时候是否删除
-        DiskFileUpload.baseDirectory = "D:" + File.separatorChar + "aa"; // 系统存储文件的位置
+        DiskFileUpload.baseDirectory = "/data" + File.separatorChar + "aa"; // 系统存储文件的位置
         DiskAttribute.deleteOnExitTemporaryFile = true; //如果属性出现重复选择删掉
-        DiskAttribute.baseDirectory = "D:" + File.separatorChar + "aa"; // 属性文件存储目录。
+        DiskAttribute.baseDirectory = "/data" + File.separatorChar + "aa"; // 属性文件存储目录。
     }
 
     /**

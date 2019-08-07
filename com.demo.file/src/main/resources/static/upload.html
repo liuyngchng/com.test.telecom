@@ -23,30 +23,30 @@
                 if (end > blob.size) {
                     end = blob.size;
                 }
-                console.log('upload index ' + index + ' start ' + start + ' end ' + end )
-                setTimeout(uploadFile(blob, index, start, end), 1000);
+                setTimeout(uploadFile(blob, index, start, end), 5000);
                 start = end;
                 index++;
                 if (index > total_slices) {
+                    console.error('index_' + index + '_' + total_slices)
                     window.location = "error.html";
                 }
             }
         }
-
         //上传文件
         function uploadFile(blob, index, start, end) {
+            console.log('u_' + index + '_' + total_slices)
             var sliceIndex = blob.name + '_' + index + '_' + total_slices;
             var chunk = blob.slice(start, end, blob.type);//切割文件
             chunk.name = sliceIndex;
             var fd = new FormData();
             fd.append(chunk.name, chunk);
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'http://localhost:8082/upload', false);
+            xhr.open('POST', 'upload', false);
             xhr.send(fd);
             if (xhr.status == 200) {
-                console.log('success for chunk ' + chunk.name)
+                console.log('s_chunk_' + index)
             } else {
-                console.log('error for chunk ' + chunk.name)
+                console.error('e_chunk_' + index)
             }
         }
 

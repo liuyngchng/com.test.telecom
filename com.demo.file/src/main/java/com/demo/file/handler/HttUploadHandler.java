@@ -84,6 +84,7 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
     }
 
     private void writeChunk(ChannelHandlerContext ctx) throws IOException {
+        boolean isHttpResponsed = false;
         while (this.httpDecoder.hasNext()) {
             InterfaceHttpData data = this.httpDecoder.next();
             if (data != null && InterfaceHttpData.HttpDataType.FileUpload.equals(data.getHttpDataType())) {
@@ -94,10 +95,15 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
                      FileChannel outputChannel = new FileOutputStream(file).getChannel()) {
                     outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
                     ResponseUtil.responseJson(ctx, this.request, new GeneralResponse(HttpResponseStatus.OK, "SUCCESS", null));
+                    isHttpResponsed = true;
                 } finally {
-
+                    LOGGER.debug("http response");
                 }
             }
+        }
+        if (!isHttpResponsed) {
+            LOGGER.info("no upload file detected");
+            ResponseUtil.responseJson(ctx, request, new GeneralResponse(HttpResponseStatus.NOT_ACCEPTABLE, "upload failed", null));
         }
     }
 

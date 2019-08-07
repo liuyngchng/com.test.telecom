@@ -8,13 +8,12 @@
         var BYTES_PER_CHUNK = 1024 * 10; //1024 * 1024;// 每个文件切片大小定为1MB .
         var slices;
         var total_slices;
-
-        //发送请求
         function sendRequest() {
+            document.getElementById("status").innerText = '正在上传'
             var blob = document.getElementById("file").files[0];
             var start = 0;
             var end;
-            var index = 0;
+            var index = 1;
             // 计算文件切片总数
             total_slices = Math.ceil(blob.size / BYTES_PER_CHUNK);
             console.log('total slices is ' + total_slices + ', file size ' + blob.size);
@@ -26,13 +25,12 @@
                 setTimeout(uploadFile(blob, index, start, end), 5000);
                 start = end;
                 index++;
-                if (index > total_slices) {
+                if (index > total_slices + 1) {
                     console.error('index_' + index + '_' + total_slices)
                     window.location = "error.html";
                 }
             }
         }
-        //上传文件
         function uploadFile(blob, index, start, end) {
             console.log('u_' + index + '_' + total_slices)
             var sliceIndex = blob.name + '_' + index + '_' + total_slices;
@@ -44,24 +42,23 @@
             xhr.open('POST', 'upload', false);
             xhr.send(fd);
             if (xhr.status == 200) {
-                console.log('s_chunk_' + index)
+                console.log('s_chunk_' + index);
+                var percent = (index / total_slices *100).toFixed(1)
+                if (percent % 10 == 0) {
+                    document.getElementById("status").innerText = percent +'% 已上传';
+                }
             } else {
                 console.error('e_chunk_' + index)
             }
         }
-
     </script>
 
     <script type="application/javascript">
-//        var BYTES_PER_CHUNK = 1024 * 10; //1024 * 1024; // 每个文件切片大小定为1MB .
-//        var slices;
-//        var total_slices;
         function sendFile() {
             var blob = document.getElementById("file").files[0];
             var value = new FormData();
             value.append(blob.name, blob);
             var xhr = new XMLHttpRequest();
-            //false指同步上传，因为我的服务器内存较小，选择同步，如果追求速度，可以选择 //ture，异步上传
             xhr.open('POST', 'upload', false);
             xhr.send(value);
             if (xhr.status == 200) {
@@ -69,15 +66,12 @@
             }
 
         }
-
-
-
     </script>
 </head>
 <body>
     <h3>Upload Test</h3>
     <span>attach：</span>
-    <input type="file" name="file" id="file"> <br/>
+    <input type="file" name="file" id="file"> <span id="status">上传进度</span><br/>
     <input type="submit" name="submit"  onclick="sendRequest()" >
 </body>
 </html>

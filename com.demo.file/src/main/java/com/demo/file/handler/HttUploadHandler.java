@@ -26,14 +26,12 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
      * true: 将数据缓存至磁盘，false: 将数据缓存在memory
      */
     private static final HttpDataFactory factory = new DefaultHttpDataFactory(true);
+
     private static final String FILE_UPLOAD = "/tmp/";
 
     private static final String URI = "/upload";
 
     private HttpPostRequestDecoder httpDecoder;
-
-
-
 
     private HttpRequest request;
 
@@ -69,8 +67,6 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
 
     }
 
-
-
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         ctx.flush();
@@ -84,7 +80,7 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
     }
 
     private void writeChunk(ChannelHandlerContext ctx) throws IOException {
-        boolean isHttpResponsed = false;
+        boolean isHttpResponse = false;
         while (this.httpDecoder.hasNext()) {
             InterfaceHttpData data = this.httpDecoder.next();
             if (data != null && InterfaceHttpData.HttpDataType.FileUpload.equals(data.getHttpDataType())) {
@@ -95,13 +91,13 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
                      FileChannel outputChannel = new FileOutputStream(file).getChannel()) {
                     outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
                     ResponseUtil.responseJson(ctx, this.request, new GeneralResponse(HttpResponseStatus.OK, "SUCCESS", null));
-                    isHttpResponsed = true;
+                    isHttpResponse = true;
                 } finally {
                     LOGGER.debug("http response");
                 }
             }
         }
-        if (!isHttpResponsed) {
+        if (!isHttpResponse) {
             LOGGER.info("no upload file detected");
             ResponseUtil.responseJson(ctx, request, new GeneralResponse(HttpResponseStatus.NOT_ACCEPTABLE, "upload failed", null));
         }

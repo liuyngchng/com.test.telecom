@@ -10,17 +10,17 @@
 		<!--<File name="file" fileName="${LOG_HOME}/test.log">-->
 			<!--<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS} [%p] [%t] [%c{1}:%L] %msg%n"/>-->
 		<!--</File>-->
-		<RollingFile name="rollingFile" fileName="${LOG_HOME}/test.log"  filePattern="${LOG_HOME}/%d{yyyy-MM-dd-HH-mm}-test.log" >
-			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%-5level] [%C]:%L - %msg%n"/>
-            <Policies>
-                <TimeBasedTriggeringPolicy />
-            </Policies>
-            <DefaultRolloverStrategy max="100">
-                <Delete basePath="${LOG_HOME}" maxDepth="2">
-                    <IfAccumulatedFileCount exceeds="20" />
-                </Delete>
-            </DefaultRolloverStrategy>
-		</RollingFile>
+<!--		<RollingFile name="rollingFile" fileName="${LOG_HOME}/test.log"  filePattern="${LOG_HOME}/%d{yyyy-MM-dd-HH-mm}-test.log" >-->
+<!--			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%-5level] [%C]:%L - %msg%n"/>-->
+<!--            <Policies>-->
+<!--                <TimeBasedTriggeringPolicy />-->
+<!--            </Policies>-->
+<!--            <DefaultRolloverStrategy max="100">-->
+<!--                <Delete basePath="${LOG_HOME}" maxDepth="2">-->
+<!--                    <IfAccumulatedFileCount exceeds="20" />-->
+<!--                </Delete>-->
+<!--            </DefaultRolloverStrategy>-->
+<!--		</RollingFile>-->
     </Appenders>
 	<Loggers>
 		<Root level="INFO" additivity="false">

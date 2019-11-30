@@ -4,12 +4,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Index</title>
+    <link rel="stylesheet" href="/css/demo.css">
+    <link rel="stylesheet" href="/css/zTreeStyle/zTreeStyle.css">
     <#--<script type="text/css" src="/css/bootstrap.min.css"></script>-->
+    <#--    <script type="application/javascript" src="/js/jquery.ztree.all.js"></script>-->
     <script type="application/javascript" src="/js/jquery-1.4.4.min.js"></script>
-<#--    <script type="application/javascript" src="/js/jquery.ztree.all.js"></script>-->
-    <SCRIPT type="application/javascript" src="js/jquery.ztree.core.js"></SCRIPT>
-    <script type="text/css" src="/css/zTreeStyle/zTreeStyle.css"></script>
-    <script type="text/css" src="/css/demo.css"></script>
+    <script type="application/javascript" src="js/jquery.ztree.core.js"></script>
     <script type="text/javascript">
         <!--
         var setting = {
@@ -67,23 +67,18 @@
 
 </head>
 <body>
-<#--    <div align="right"><a href="/logout">退出</a><br/></div>-->
-<#--    你好, ${name!}, 现在时间 ${date!}-->
+    <div align="right"><a href="/logout">退出</a><br/></div>
+    你好, ${name!}, 现在时间 ${date!}
     <div class="content_wrap">
         <div class="zTreeDemoBackground left">
             <ul id="treeDemo" class="ztree"></ul>
         </div>
         <div class="right">
             <ul class="info">
-                <li class="title"><h2>1、setting 配置信息说明</h2>
+                <li class="title"><h2>1.this is a demo</h2>
                     <ul class="list">
-                        <li>此 Demo 利用 Function 设置了使父节点不显示图标的规则</li>
-                        <li class="highlight_red">是否显示节点图标请设置 setting.view.showIcon 属性，详细请参见 API 文档中的相关内容</li>
-                    </ul>
-                </li>
-                <li class="title"><h2>2、treeNode 节点数据说明</h2>
-                    <ul class="list">
-                        <li>是否显示图标，不需要 treeNode 节点数据提供特殊设置，但如果用户需要根据不同节点动态设置，可以对节点数据增加特殊属性，用于判别</li>
+                        <li>just a demo</li>
+                        <li class="highlight_red">just a demo</li>
                     </ul>
                 </li>
             </ul>

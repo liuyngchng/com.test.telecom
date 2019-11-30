@@ -21,6 +21,7 @@
         <module>com.demo.bootstrap</module>
         <module>com.demo.file</module>
         <module>com.demo.common</module>
+        <module>com.demo.addrlist</module>
     </modules>
     <dependencyManagement>
         <dependencies>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info" name="MyApp" package="">
+	<Properties>
+		<Property name="LOG_HOME">./logs</Property>
+	</Properties>
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss,SSS} [%p] [%t] [%c{1}:%L] %msg%n"/>
+		</Console>
+		<!--<File name="file" fileName="${LOG_HOME}/test.log">-->
+			<!--<PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss,SSS} [%p] [%t] [%c{1}:%L] %msg%n"/>-->
+		<!--</File>-->
+		<RollingFile name="rollingFile" fileName="${LOG_HOME}/test.log"  filePattern="${LOG_HOME}/%d{YYYY-MM-dd-HH-mm}-test.log" >
+            <PatternLayout pattern="%d{YYYY-MM-dd HH:mm:ss,SSS} [%c{1}:%L] %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy max="100">
+                <Delete basePath="${LOG_HOME}" maxDepth="2">
+                    <IfAccumulatedFileCount exceeds="20" />
+                </Delete>
+            </DefaultRolloverStrategy>
+		</RollingFile>
+    </Appenders>
+	<Loggers>
+		<Root level="INFO" additivity="false">
+			<AppenderRef ref="console"/>
+			<AppenderRef ref="rollingFile"/>
+		</Root>
+		<!--<Logger name="hello.controller" level="ERROR" additivity="false">-->
+			<!--&lt;!&ndash;<AppenderRef ref="console"/>&ndash;&gt;-->
+			<!--<AppenderRef ref="rollingFile"/>-->
+		<!--</Logger>-->
+	</Loggers>
+</Configuration>

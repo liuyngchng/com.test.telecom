@@ -21,9 +21,9 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/")
-public class SampleController {
+public class LoginController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SampleController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

@@ -16,7 +16,8 @@
         <!--
         var setting = {
             view: {
-                showIcon: showIconForTree
+                showIcon: showIconForTree,
+                selectedMulti: true
             },
             data: {
                 simpleData: {
@@ -37,7 +38,8 @@
             },
             callback: {
                 beforeDrag: beforeDrag,
-                beforeDrop: beforeDrop
+                beforeDrop: beforeDrop,
+                beforeClick: beforeClick
             }
         };
 
@@ -90,6 +92,87 @@
             return targetNode ? targetNode.drop !== false : true;
         };
 
+        function beforeClick(treeId, treeNode) {
+            return !treeNode.isCur;
+        };
+
+        var curSrcNode, curType;
+        function fontCss(treeNode) {
+            var aObj = $("#" + treeNode.tId + "_a");
+            aObj.removeClass("copy").removeClass("cut");
+            if (treeNode === curSrcNode) {
+                if (curType == "copy") {
+                    aObj.addClass(curType);
+                } else {
+                    aObj.addClass(curType);
+                }
+            }
+        };
+
+        function setCurSrcNode(treeNode) {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            if (curSrcNode) {
+                delete curSrcNode.isCur;
+                var tmpNode = curSrcNode;
+                curSrcNode = null;
+                fontCss(tmpNode);
+            }
+            curSrcNode = treeNode;
+            if (!treeNode) return;
+
+            curSrcNode.isCur = true;
+            zTree.cancelSelectedNode();
+            fontCss(curSrcNode);
+        };
+
+        function copy(e) {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                nodes = zTree.getSelectedNodes();
+            if (nodes.length == 0) {
+                alert("请先选择一个节点");
+                return;
+            }
+            curType = "copy";
+            setCurSrcNode(nodes[0]);
+        }
+        function cut(e) {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                nodes = zTree.getSelectedNodes();
+            if (nodes.length == 0) {
+                alert("请先选择一个节点");
+                return;
+            }
+            curType = "cut";
+            setCurSrcNode(nodes[0]);
+        }
+        function paste(e) {
+            if (!curSrcNode) {
+                alert("请先选择一个节点进行 复制 / 剪切");
+                return;
+            }
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                nodes = zTree.getSelectedNodes(),
+                targetNode = nodes.length>0? nodes[0]:null;
+            if (curSrcNode === targetNode) {
+                alert("不能移动，源节点 与 目标节点相同");
+                return;
+            } else if (curType === "cut" && ((!!targetNode && curSrcNode.parentTId === targetNode.tId) || (!targetNode && !curSrcNode.parentTId))) {
+                alert("不能移动，源节点 已经存在于 目标节点中");
+                return;
+            } else if (curType === "copy") {
+                targetNode = zTree.copyNode(targetNode, curSrcNode, "inner");
+            } else if (curType === "cut") {
+                targetNode = zTree.moveNode(targetNode, curSrcNode, "inner");
+                if (!targetNode) {
+                    alert("剪切失败，源节点是目标节点的父节点");
+                }
+                targetNode = curSrcNode;
+            }
+            setCurSrcNode();
+            delete targetNode.isCur;
+            zTree.selectNode(targetNode);
+        }
+
         function setCheck() {
             var isCopy = setting.edit.drag.isCopy,
             isMove = setting.edit.drag.isMove,
@@ -111,11 +194,14 @@
         $(document).ready(function(){
             $.fn.zTree.init($("#treeDemo"), setting, zNodes);
             setCheck();
-            $("#copy").bind("change", setCheck);
+            // $("#copy").bind("change", setCheck);
             $("#move").bind("change", setCheck);
             $("#prev").bind("change", setCheck);
             $("#inner").bind("change", setCheck);
             $("#next").bind("change", setCheck);
+            $("#copy").bind("click", copy);
+            $("#cut").bind("click", cut);
+            $("#paste").bind("click", paste);
         });
         //-->
     </script>
@@ -132,7 +218,9 @@
             <ul class="info">
                 <li class="title"><h2>1.this is a demo</h2>
                     <ul class="list">
-                        <li>just a demo</li>
+                        <li>&nbsp;&nbsp;&nbsp;&nbsp;[ <a id="copy" href="#" title="复制" onclick="return false;">复制</a> ]
+                            &nbsp;&nbsp;&nbsp;&nbsp;[ <a id="cut" href="#" title="剪切" onclick="return false;">剪切</a> ]
+                            &nbsp;&nbsp;&nbsp;&nbsp;[ <a id="paste" href="#" title="粘贴" onclick="return false;">粘贴</a> ]</p></li>
                         <li class="highlight_red">just a demo</li>
                     </ul>
                 </li>

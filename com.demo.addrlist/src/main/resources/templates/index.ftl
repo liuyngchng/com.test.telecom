@@ -9,7 +9,9 @@
     <#--<script type="text/css" src="/css/bootstrap.min.css"></script>-->
     <#--    <script type="application/javascript" src="/js/jquery.ztree.all.js"></script>-->
     <script type="application/javascript" src="/js/jquery-1.4.4.min.js"></script>
-    <script type="application/javascript" src="js/jquery.ztree.core.js"></script>
+    <script type="application/javascript" src="/js/jquery.ztree.core.js"></script>
+    <script type="application/javascript" src="/js/jquery.ztree.excheck.js"></script>
+    <script type="application/javascript" src="/js/jquery.ztree.exedit.js"></script>
     <script type="text/javascript">
         <!--
         var setting = {
@@ -20,6 +22,22 @@
                 simpleData: {
                     enable: true
                 }
+            },
+            edit: {
+                enable: true,
+                showRemoveBtn: false,
+                showRenameBtn: false,
+                drag:{
+                    isCopy: true,
+                    isMove: true,
+                    prev: true,
+                    inner: true,
+                    next: true
+                }
+            },
+            callback: {
+                beforeDrag: beforeDrag,
+                beforeDrop: beforeDrop
             }
         };
 
@@ -59,8 +77,45 @@
             return !treeNode.isParent;
         };
 
+        function beforeDrag(treeId, treeNodes) {
+            for (var i=0,l=treeNodes.length; i<l; i++) {
+                if (treeNodes[i].drag === false) {
+                    return false;
+                }
+            }
+            return true;
+        };
+
+        function beforeDrop(treeId, treeNodes, targetNode, moveType) {
+            return targetNode ? targetNode.drop !== false : true;
+        };
+
+        function setCheck() {
+            var isCopy = setting.edit.drag.isCopy,
+            isMove = setting.edit.drag.isMove,
+            prev = setting.edit.drag.prev,
+            inner = setting.edit.drag.inner,
+            next = setting.edit.drag.next;
+            showCode(1, ['setting.edit.drag.isCopy = ' + isCopy, 'setting.edit.drag.isMove = ' + isMove]);
+            showCode(2, ['setting.edit.drag.prev = ' + prev, 'setting.edit.drag.inner = ' + inner, 'setting.edit.drag.next = ' + next]);
+        };
+
+        function showCode(id, str) {
+            var code = $("#code" + id);
+            code.empty();
+            for (var i=0, l=str.length; i<l; i++) {
+                code.append("<li>"+str[i]+"</li>");
+            }
+        }
+
         $(document).ready(function(){
             $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            setCheck();
+            $("#copy").bind("change", setCheck);
+            $("#move").bind("change", setCheck);
+            $("#prev").bind("change", setCheck);
+            $("#inner").bind("change", setCheck);
+            $("#next").bind("change", setCheck);
         });
         //-->
     </script>

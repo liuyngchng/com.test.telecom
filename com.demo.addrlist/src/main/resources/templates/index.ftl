@@ -17,7 +17,7 @@
         var setting = {
             view: {
                 showIcon: showIconForTree,
-                selectedMulti: true
+                selectedMulti: false
             },
             data: {
                 simpleData: {

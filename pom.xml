@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <properties>
         <maven.test.skip>true</maven.test.skip>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <modules>
         <module>com.demo.client.connect</module>
@@ -20,6 +21,7 @@
         <module>com.demo.bootstrap</module>
         <module>com.demo.file</module>
         <module>com.demo.common</module>
+        <module>com.demo.addrlist</module>
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -31,7 +33,7 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-all</artifactId>
-                <version>4.1.4.Final</version>
+                <version>4.1.42.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>

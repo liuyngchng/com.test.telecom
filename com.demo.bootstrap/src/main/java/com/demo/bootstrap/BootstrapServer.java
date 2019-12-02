@@ -1,6 +1,6 @@
 package com.demo.bootstrap;
 
-
+import com.demo.client.bootstrap.HttpServer;
 import com.demo.client.connect.bootstrap.WsServer;
 import com.demo.file.FileServer;
 import org.slf4j.Logger;
@@ -18,7 +18,10 @@ public class BootstrapServer {
     public static void main(String[] args) {
         LOGGER.info("BootstrapServer start.");
         ExecutorService executorService = Executors.newFixedThreadPool(2);
-
+        executorService.submit(() -> {
+            LOGGER.info("start client server");
+            HttpServer.start(8080);
+        });
         executorService.submit(() -> {
             LOGGER.info("starting wsServer");
             WsServer.start(8081);

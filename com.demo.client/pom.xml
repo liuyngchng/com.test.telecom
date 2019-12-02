@@ -8,8 +8,22 @@
         <artifactId>test.mail</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>com.demo.common</artifactId>
+    <artifactId>com.demo.client</artifactId>
     <dependencies>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.demo.telecom</groupId>
+            <artifactId>com.demo.common</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+    
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
@@ -23,21 +37,17 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
         </dependency>
+
+        <!--  junit test  -->
         <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
+   
         <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-x-discovery</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -52,12 +62,11 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.demo.telecom.bootstrap.WsServer</mainClass>
+                            <mainClass>com.demo.client.bootstrap.HttpServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>

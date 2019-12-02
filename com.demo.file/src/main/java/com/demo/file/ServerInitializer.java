@@ -1,6 +1,6 @@
 package com.demo.file;
 
-import com.demo.file.handler.HttUploadHandler;
+import com.demo.file.handler.HttpUploadHandler;
 import com.demo.file.handler.HttpDownloadHandler;
 import com.demo.file.handler.DefaultServerHandler;
 import io.netty.channel.ChannelInitializer;
@@ -23,7 +23,7 @@ public class ServerInitializer extends ChannelInitializer<SocketChannel> {
         //HTTP 服务的解码器
         ch.pipeline().addLast(new HttpServerCodec(4096, 8192, 1024 * 1024 * 10));
         // 用于上传文件
-        ch.pipeline().addLast(executors, new HttUploadHandler());
+        ch.pipeline().addLast(executors, new HttpUploadHandler());
         //HTTP 消息的合并处理
         ch.pipeline().addLast(new HttpObjectAggregator(10 * 1024));
         // 新增ChunkedHandler，主要作用是支持异步发送大的码流（例如大文件传输），但是不占用过多的内存，防止发生java内存溢出错误

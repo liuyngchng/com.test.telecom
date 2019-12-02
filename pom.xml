@@ -10,9 +10,11 @@
     <packaging>pom</packaging>
     <properties>
         <maven.test.skip>true</maven.test.skip>
+        <encoding>UTF-8</encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <modules>
+        <module>com.demo.client</module>
         <module>com.demo.client.connect</module>
         <module>com.demo.msg.dispatcher</module>
         <module>com.demo.msg.inbox</module>
@@ -22,6 +24,7 @@
         <module>com.demo.file</module>
         <module>com.demo.common</module>
         <module>com.demo.addrlist</module>
+
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -84,6 +87,11 @@
                 <groupId>org.apache.curator</groupId>
                 <artifactId>curator-x-discovery</artifactId>
                 <version>4.2.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.xerial</groupId>
+                <artifactId>sqlite-jdbc</artifactId>
+                <version>3.21.0.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

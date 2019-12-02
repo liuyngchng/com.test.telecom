@@ -19,16 +19,14 @@ public class FileUtil {
 
     private static final String namePattern = "_vim_highlight";
 
-    private static final String location = "/tmp/";
+    private static final String location = "/tmp/_vim_highlight";
 
-    public static final int BUF_SIZE = 1024 * 80;
+    public static final int BUF_SIZE = 1024 * 8;
 
 
 
     public static void merge(String outFileName, String inFileDir) {
-        File fileDir  = new File(inFileDir);
-        File[] fs = fileDir.listFiles();
-        LOGGER.info("all {} files", fs.length);
+
         File file  = new File(outFileName);
         if (file.exists()) {
             LOGGER.info("file {} existed", outFileName);
@@ -40,6 +38,10 @@ public class FileUtil {
             LOGGER.error("error", e);
             return;
         }
+        File fileDir  = new File(inFileDir);
+        File[] fs = fileDir.listFiles();
+        LOGGER.info("all {} files", fs.length);
+
         int count = mergeFiles(outFileName, fs, namePattern);
         LOGGER.info("{} files merged", count);
 
@@ -63,7 +65,6 @@ public class FileUtil {
                     bb.clear();
                 }
                 fc.close();
-                count ++;
 //                LOGGER.info("{} file {} merged", count++, f.getName());
             }
         } catch (IOException ioe) {
@@ -81,7 +82,7 @@ public class FileUtil {
     }
 
     public static void main(String[] args) {
-        merge(location + namePattern + ".webarchive" , location);
+        merge(location + ".html" , location);
         LOGGER.info("merge finished.");
     }
 

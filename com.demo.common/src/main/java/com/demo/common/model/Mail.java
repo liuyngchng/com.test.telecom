@@ -1,7 +1,7 @@
 package com.demo.common.model;
 
 
-import com.demo.common.enums.MailState;
+import com.demo.common.enums.MailStatus;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -23,16 +23,19 @@ public class Mail implements Serializable {
 
     private String to;
 
+    private String title;
+
     private String cc;
 
-    private Date date;
-
-    private int state = MailState.NOT_DELIVERED.getValue();
+    private int status = MailStatus.NOT_DELIVERED.getValue();
 
     private String text;
 
     private String attachment;
 
+    private Date createTime;
+
+    private Date updateTime;
 
 
     public long getId() {
@@ -59,20 +62,12 @@ public class Mail implements Serializable {
         this.to = to;
     }
 
-    public Date getDate() {
-        return date;
+    public int getStatus() {
+        return status;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getCc() {
@@ -100,6 +95,30 @@ public class Mail implements Serializable {
     }
 
     public void setDelivered() {
-        this.state = MailState.DELIVERED.getValue();
+        this.status = MailStatus.DELIVERED.getValue();
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

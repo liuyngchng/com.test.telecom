@@ -8,7 +8,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.multipart.*;
-import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,15 +17,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
-public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
+public class HttpUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HttUploadHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpUploadHandler.class);
 
     /**
      * true: 将数据缓存至磁盘，false: 将数据缓存在memory
      */
     private static final HttpDataFactory factory = new DefaultHttpDataFactory(true);
-
     private static final String FILE_UPLOAD = "/tmp/";
 
     private static final String URI = "/upload";
@@ -80,7 +78,6 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
     }
 
     private void writeChunk(ChannelHandlerContext ctx) throws IOException {
-        boolean isHttpResponse = false;
         while (this.httpDecoder.hasNext()) {
             InterfaceHttpData data = this.httpDecoder.next();
             if (data != null && InterfaceHttpData.HttpDataType.FileUpload.equals(data.getHttpDataType())) {
@@ -91,15 +88,10 @@ public class HttUploadHandler extends SimpleChannelInboundHandler<HttpObject> {
                      FileChannel outputChannel = new FileOutputStream(file).getChannel()) {
                     outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
                     ResponseUtil.responseJson(ctx, this.request, new GeneralResponse(HttpResponseStatus.OK, "SUCCESS", null));
-                    isHttpResponse = true;
                 } finally {
-                    LOGGER.debug("http response");
+
                 }
             }
-        }
-        if (!isHttpResponse) {
-            LOGGER.info("no upload file detected");
-            ResponseUtil.responseJson(ctx, request, new GeneralResponse(HttpResponseStatus.NOT_ACCEPTABLE, "upload failed", null));
         }
     }
 

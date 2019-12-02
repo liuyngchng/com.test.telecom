@@ -115,7 +115,8 @@ public class HttpDownloadHandler extends SimpleChannelInboundHandler<FullHttpReq
      * @param filename
      */
     private void getLocalFile(ChannelHandlerContext ctx, FullHttpRequest request, String filename) {
-        GeneralResponse generalResponse;File file = new File(filePath + filename);
+        GeneralResponse generalResponse;
+        File file = new File(filePath + filename);
         try {
 
 

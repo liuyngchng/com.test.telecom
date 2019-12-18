@@ -29,3 +29,8 @@ settings.xml can be as following
 </settings>
 
 ```
+若本地仓下的jar所在的文件夹（~/.m2/repository/aaa/bbb/ccc.jar）下存在文件"_remote.reposiories",
+则需要删除， 否则会报
+```error
+Cannot access central (file://a/b/c) in offline mode
+```

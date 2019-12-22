@@ -6,8 +6,8 @@
     <title>Index</title>
     <link rel="stylesheet" href="/css/demo.css">
     <link rel="stylesheet" href="/css/zTreeStyle/zTreeStyle.css">
-    <#--<script type="text/css" src="/css/bootstrap.min.css"></script>-->
-    <#--    <script type="application/javascript" src="/js/jquery.ztree.all.js"></script>-->
+    <!-- <script type="text/css" src="/css/bootstrap.min.css"></script>
+    <script type="application/javascript" src="/js/jquery.ztree.all.js"></script> -->
     <script type="application/javascript" src="/js/jquery-1.4.4.min.js"></script>
     <script type="application/javascript" src="/js/jquery.ztree.core.js"></script>
     <script type="application/javascript" src="/js/jquery.ztree.excheck.js"></script>
@@ -16,7 +16,7 @@
         <!--
         var setting = {
             view: {
-                showIcon: showIconForTree,
+                showIcon: false,
                 selectedMulti: false,
                 dblClickExpand: false
             },
@@ -28,7 +28,7 @@
             edit: {
                 enable: true,
                 showRemoveBtn: false,
-                showRenameBtn: false,
+                showRenameBtn: true,
                 drag:{
                     isCopy: true,
                     isMove: true,
@@ -46,35 +46,35 @@
         };
 
         var zNodes =[
-            { id:1, pId:0, name:"父节点1 - 展开", open:true},
-            { id:11, pId:1, name:"父节点11 - 折叠"},
-            { id:111, pId:11, name:"叶子节点111"},
-            { id:112, pId:11, name:"叶子节点112"},
-            { id:113, pId:11, name:"叶子节点113"},
-            { id:114, pId:11, name:"叶子节点114"},
-            { id:12, pId:1, name:"父节点12 - 折叠"},
-            { id:121, pId:12, name:"叶子节点121"},
-            { id:122, pId:12, name:"叶子节点122"},
-            { id:123, pId:12, name:"叶子节点123"},
-            { id:124, pId:12, name:"叶子节点124"},
-            { id:13, pId:1, name:"父节点13 - 没有子节点", isParent:true},
-            { id:2, pId:0, name:"父节点2 - 折叠"},
-            { id:21, pId:2, name:"父节点21 - 展开", open:true},
-            { id:211, pId:21, name:"叶子节点211"},
-            { id:212, pId:21, name:"叶子节点212"},
-            { id:213, pId:21, name:"叶子节点213"},
-            { id:214, pId:21, name:"叶子节点214"},
-            { id:22, pId:2, name:"父节点22 - 折叠"},
-            { id:221, pId:22, name:"叶子节点221"},
-            { id:222, pId:22, name:"叶子节点222"},
-            { id:223, pId:22, name:"叶子节点223"},
-            { id:224, pId:22, name:"叶子节点224"},
-            { id:23, pId:2, name:"父节点23 - 折叠"},
-            { id:231, pId:23, name:"叶子节点231"},
-            { id:232, pId:23, name:"叶子节点232"},
-            { id:233, pId:23, name:"叶子节点233"},
-            { id:234, pId:23, name:"叶子节点234"},
-            { id:3, pId:0, name:"父节点3 - 没有子节点", isParent:true}
+            { id:1, pId:0, name:"节点1 ", open:true},
+            { id:11, pId:1, name:"节点11"},
+            { id:111, pId:11, name:"节点111"},
+            { id:112, pId:11, name:"节点112"},
+            { id:113, pId:11, name:"节点113"},
+            { id:114, pId:11, name:"节点114"},
+            { id:12, pId:1, name:"节点12"},
+            { id:121, pId:12, name:"节点121"},
+            { id:122, pId:12, name:"节点122"},
+            { id:123, pId:12, name:"节点123"},
+            { id:124, pId:12, name:"节点124"},
+            { id:13, pId:1, name:"节点13", isParent:true},
+            { id:2, pId:0, name:"节点2"},
+            { id:21, pId:2, name:"节点21", open:true},
+            { id:211, pId:21, name:"节点211"},
+            { id:212, pId:21, name:"节点212"},
+            { id:213, pId:21, name:"节点213"},
+            { id:214, pId:21, name:"节点214"},
+            { id:22, pId:2, name:"节点22"},
+            { id:221, pId:22, name:"节点221"},
+            { id:222, pId:22, name:"节点222"},
+            { id:223, pId:22, name:"节点223"},
+            { id:224, pId:22, name:"节点224"},
+            { id:23, pId:2, name:"节点23"},
+            { id:231, pId:23, name:"节点231"},
+            { id:232, pId:23, name:"节点232"},
+            { id:233, pId:23, name:"节点233"},
+            { id:234, pId:23, name:"节点234"},
+            { id:3, pId:0, name:"节点3", isParent:true}
         ];
 
         function showIconForTree(treeId, treeNode) {
@@ -177,16 +177,24 @@
 
         function setCheck() {
             var isCopy = setting.edit.drag.isCopy,
-            isMove = setting.edit.drag.isMove,
-            prev = setting.edit.drag.prev,
-            inner = setting.edit.drag.inner,
-            next = setting.edit.drag.next;
+                isMove = setting.edit.drag.isMove,
+                prev = setting.edit.drag.prev,
+                inner = setting.edit.drag.inner,
+                next = setting.edit.drag.next;
             showCode(1, ['setting.edit.drag.isCopy = ' + isCopy, 'setting.edit.drag.isMove = ' + isMove]);
             showCode(2, ['setting.edit.drag.prev = ' + prev, 'setting.edit.drag.inner = ' + inner, 'setting.edit.drag.next = ' + next]);
         };
 
         function showCode(id, str) {
             var code = $("#code" + id);
+            code.empty();
+            for (var i=0, l=str.length; i<l; i++) {
+                code.append("<li>"+str[i]+"</li>");
+            }
+        }
+
+        function showCode(str) {
+            var code = $("#code");
             code.empty();
             for (var i=0, l=str.length; i<l; i++) {
                 code.append("<li>"+str[i]+"</li>");
@@ -233,7 +241,7 @@
         var addCount = 1;
         function addTreeNode() {
             hideRMenu();
-            var newNode = { name:"增加" + (addCount++)};
+            var newNode = { name:"新增节点" + (addCount++)};
             if (zTree.getSelectedNodes()[0]) {
                 newNode.checked = zTree.getSelectedNodes()[0].checked;
                 zTree.addNodes(zTree.getSelectedNodes()[0], newNode);
@@ -267,7 +275,11 @@
             $.fn.zTree.init($("#treeDemo"), setting, zNodes);
         }
 
-
+        function setEdit() {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            showCode(['setting.edit.showRenameBtn = true',
+                'setting.edit.renameTitle = "重命名 "']);
+        }
 
         var zTree, rMenu;
         $(document).ready(function(){
@@ -281,6 +293,7 @@
             $("#copy").bind("click", copy);
             $("#cut").bind("click", cut);
             $("#paste").bind("click", paste);
+            $("#rename").bind("change", setEdit);
             zTree = $.fn.zTree.getZTreeObj("treeDemo");
             rMenu = $("#rMenu");
         });
@@ -313,33 +326,31 @@
 
 </head>
 <body>
-    <div align="right"><a href="/logout">退出</a><br/></div>
-    你好, ${name!}, 现在时间 ${date!}
-    <div class="content_wrap">
-        <div class="zTreeDemoBackground left">
-            <ul id="treeDemo" class="ztree"></ul>
-        </div>
-        <div class="right">
-            <ul class="info">
-                <li class="title"><h2>1.this is a demo</h2>
-                    <ul class="list">
-                        <li>&nbsp;&nbsp;&nbsp;&nbsp;[ <a id="copy" href="#" title="复制" onclick="return false;">复制</a> ]
-                            &nbsp;&nbsp;&nbsp;&nbsp;[ <a id="cut" href="#" title="剪切" onclick="return false;">剪切</a> ]
-                            &nbsp;&nbsp;&nbsp;&nbsp;[ <a id="paste" href="#" title="粘贴" onclick="return false;">粘贴</a> ]</p></li>
-                        <li class="highlight_red">just a demo</li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+<div align="right"><a href="/logout">退出</a><br/></div>
+你好, ${name!}, 现在时间 ${date!}
+<div class="content_wrap">
+    <div class="zTreeDemoBackground left">
+        <ul id="treeDemo" class="ztree"></ul>
     </div>
-    <div id="rMenu">
-        <ul>
-            <li id="m_add" onclick="addTreeNode();">增加节点</li>
-            <li id="m_del" onclick="removeTreeNode();">删除节点</li>
-            <li id="m_check" onclick="checkTreeNode(true);">Check节点</li>
-            <li id="m_unCheck" onclick="checkTreeNode(false);">unCheck节点</li>
-            <li id="m_reset" onclick="resetTree();">恢复zTree</li>
+    <div class="right">
+        <ul class="info">
+            <li class="title"><h2>上层应用</h2>
+                <ul class="list">
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;[ <a id="copy" href="#" title="复制" onclick="return false;">复制</a> ]
+                        &nbsp;&nbsp;&nbsp;&nbsp;[ <a id="cut" href="#" title="剪切" onclick="return false;">剪切</a> ]
+                        &nbsp;&nbsp;&nbsp;&nbsp;[ <a id="paste" href="#" title="粘贴" onclick="return false;">粘贴</a> ]</p></li>
+                    <li class="highlight_red">上层应用</li>
+                </ul>
+            </li>
         </ul>
     </div>
+</div>
+<div id="rMenu">
+    <ul>
+        <li id="m_add" onclick="addTreeNode();">增加节点</li>
+        <li id="m_del" onclick="removeTreeNode();">删除节点</li>
+        <li id="m_reset" onclick="resetTree();">重置 </li>
+    </ul>
+</div>
 </body>
 </html>
